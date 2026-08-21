@@ -1,0 +1,34 @@
+[
+  {
+    "id": "language-learning",
+    "name": "Language Learning",
+    "icon": "🗣️",
+    "description": "Exploring new languages, cultures, and ways of communication.",
+    "items": [
+      {
+        "title": "English",
+        "notes": "Improving fluency, vocabulary, and everyday conversation skills."
+      },
+      {
+        "title": "Japanese",
+        "notes": "Learning hiragana, katakana, and basic kanji. Goal: hold a simple conversation."
+      }
+    ]
+  },
+  {
+    "id": "coding",
+    "name": "Coding",
+    "icon": "💻",
+    "description": "Building projects, solving problems, and learning new technologies.",
+    "items": [
+      {
+        "title": "Web Development",
+        "notes": "HTML, CSS, JavaScript — building websites like this one!"
+      },
+      {
+        "title": "Python",
+        "notes": "Scripting, automation, and small tools."
+      }
+    ]
+  }
+]
