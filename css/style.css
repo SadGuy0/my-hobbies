@@ -2,6 +2,7 @@
    My Hobby Hub — Workfolio style
    Inspired by yadavaman.com: pure black, Outfit font,
    fixed left vertical nav, glassmorphism, gradient accents
+   + 3D hero, smooth reveals, counters, marquee, tilt
    ============================================================ */
 
 * {
@@ -10,12 +11,17 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Outfit", sans-serif !important;
   background-color: #000;
   color: #fff;
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 a {
@@ -37,6 +43,55 @@ a {
   background: #555;
 }
 
+/* ===== Preloader ===== */
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-inner {
+  text-align: center;
+}
+
+.preloader-ring {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border: 3px solid #ffffff14;
+  border-top-color: #82a1fc;
+  border-right-color: #ffb6b6;
+  border-radius: 50%;
+  animation: spin 1s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.preloader-text {
+  font-size: 12px;
+  letter-spacing: 6px;
+  color: #ffffff80;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
 /* ===== Scroll progress bar ===== */
 .progress-bar-container {
   position: fixed;
@@ -48,10 +103,10 @@ a {
 }
 
 .progress-bar {
-  background-color: hsl(0, 0%, 83%);
+  background: linear-gradient(90deg, #283bb5, #82a1fc, #ffb6b6);
   height: 100%;
   width: 0%;
-  transition: width 0.1s linear;
+  transition: width 0.15s ease-out;
 }
 
 /* ===== Custom cursor circle ===== */
@@ -68,11 +123,13 @@ a {
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
 }
 .cursor-circle.hovering {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-color: #0071e3aa;
 }
 @media (hover: none) {
@@ -112,11 +169,15 @@ a {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: color 0.3s ease;
+  transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s ease;
   cursor: pointer;
 }
 
-.rotate-link:hover,
+.rotate-link:hover {
+  color: #0071e3;
+  transform: rotate(90deg) scale(1.08);
+}
+
 .rotate-link.active {
   color: #0071e3;
 }
@@ -149,7 +210,7 @@ a {
   min-width: calc(100% - 5.5%);
 }
 
-/* ===== Hero ===== */
+/* ===== Hero + 3D canvas ===== */
 .hero {
   height: 100vh;
   position: relative;
@@ -158,17 +219,36 @@ a {
   overflow: hidden;
 }
 
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: grab;
+}
+
+#heroCanvas:active {
+  cursor: grabbing;
+}
+
 .hero-container {
   position: relative;
-  z-index: 999999999;
+  z-index: 2;
   right: 0;
   margin-left: auto;
   margin-right: 4%;
-  width: 520px;
+  width: 560px;
   max-width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  pointer-events: none;
+}
+
+.hero-container a,
+.hero-container button {
+  pointer-events: auto;
 }
 
 .hero-text {
@@ -180,25 +260,54 @@ a {
 }
 
 .hero-heading {
-  font-size: clamp(38px, 6vw, 72px);
+  font-size: clamp(38px, 6vw, 76px);
   font-weight: 800;
   line-height: 1.05;
   color: #fff;
+  animation: heroUp 1s cubic-bezier(0.22, 1, 0.36, 1) both 0.2s;
+}
+
+@keyframes heroUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-heading .gradient-title1 {
   background-image: linear-gradient(to right, #283bb5, #82a1fc, #ffb6b6);
+  background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  animation: gradientShift 6s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
 }
 
 .hero-sub {
   margin-top: 18px;
   color: #ffffff80;
   font-size: 15px;
-  max-width: 420px;
+  max-width: 440px;
+  min-height: 48px;
+  animation: heroUp 1s cubic-bezier(0.22, 1, 0.36, 1) both 0.45s;
+}
+
+.hero-sub .type-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: #82a1fc;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  animation: blink 0.9s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .transparent-btn {
@@ -213,14 +322,55 @@ a {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: 1s;
+  transition: border-color 0.5s ease, color 0.5s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
   width: fit-content;
   margin-top: 28px;
+  animation: heroUp 1s cubic-bezier(0.22, 1, 0.36, 1) both 0.65s;
 }
 
 .transparent-btn:hover {
   border-color: #0071e3;
   color: #0071e3;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px #0071e326;
+}
+
+/* ===== Marquee strip ===== */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid #3d3d3d3b;
+  border-bottom: 1px solid #3d3d3d3b;
+  padding: 16px 0;
+  background: #050505;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 48px;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-track span {
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff59;
+}
+
+.marquee-track span b {
+  color: #ffb6b6;
+  font-weight: 500;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* ===== Section headings ===== */
@@ -250,6 +400,21 @@ a {
   font-size: 15px;
 }
 
+/* ===== Scroll reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ===== Hobby cards (gradient-border glass cards) ===== */
 .hobby-grid {
   display: grid;
@@ -264,7 +429,10 @@ a {
   padding: 2px;
   background: linear-gradient(135deg, #333, #111);
   cursor: pointer;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.5s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .first-childern.g-yellow { background: linear-gradient(135deg, #baa539, #554800); }
@@ -273,7 +441,7 @@ a {
 .first-childern.g-orange { background: linear-gradient(135deg, #ffc5b3, #b08e84); }
 
 .first-childern:hover {
-  transform: translateY(-6px);
+  box-shadow: 0 24px 60px #000000cc;
 }
 
 .card-body {
@@ -289,10 +457,16 @@ a {
   flex-direction: column;
   gap: 12px;
   transition: 0.6s;
+  transform: translateZ(24px);
 }
 
 .card-icon {
   font-size: 2.4rem;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.first-childern:hover .card-icon {
+  transform: scale(1.2) rotate(-8deg);
 }
 
 .card-title {
@@ -324,6 +498,52 @@ a {
   letter-spacing: 1px;
 }
 
+/* ===== Stats section ===== */
+.stats-section {
+  padding: 40px 6% 80px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+}
+
+.stat-box {
+  border: 1px solid #ffffff14;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-image: linear-gradient(45deg, #050a8c14, #02005710);
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 3px;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-6px);
+  border-color: #82a1fc66;
+}
+
+.stat-number {
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 800;
+  background-image: linear-gradient(to right, #82a1fc, #ffb6b6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.stat-label {
+  margin-top: 6px;
+  color: #ffffff80;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
 /* ===== Hobby detail view ===== */
 .back-link {
   display: inline-block;
@@ -333,10 +553,12 @@ a {
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 1px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .back-link:hover {
   text-decoration: underline;
+  transform: translateX(-4px);
 }
 
 .detail-header {
@@ -348,6 +570,12 @@ a {
 
 .detail-header .icon {
   font-size: 3rem;
+  animation: floatY 3.5s ease-in-out infinite;
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .detail-header h1 {
@@ -381,13 +609,15 @@ a {
   display: flex;
   border: 1px solid rgba(0, 0, 255, 0.462);
   background-color: transparent;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
 }
 
 .accordion-items:hover {
   background-image: linear-gradient(45deg, #050a8c4f, #02005778);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transform: translateX(8px);
+  box-shadow: -8px 0 0 #0071e355;
 }
 
 .accordion-items h3 {
@@ -431,6 +661,12 @@ a {
   padding: 28px;
   border-radius: 2px;
   max-width: 760px;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.boxs:hover {
+  border-color: #ff000066;
+  box-shadow: 0 20px 50px #f443360d;
 }
 
 .aboutli {
@@ -463,6 +699,40 @@ a {
   margin: 0 6% 60px;
 }
 
+/* ===== Back to top ===== */
+.back-to-top {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #ffffff1c;
+  background: #0b0b0bcc;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0.45s ease, border-color 0.35s ease, color 0.35s ease;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  border-color: #0071e3;
+  color: #0071e3;
+}
+
 /* ===== Footer ===== */
 .site-footer {
   border-top: 1px solid #3d3d3d3b;
@@ -477,11 +747,13 @@ a {
 }
 
 .footericons a {
-  transition: color 0.3s ease, filter 0.3s ease;
+  display: inline-block;
+  transition: color 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .footericons a:hover {
   color: #0071e3;
+  transform: translateY(-6px) scale(1.08);
 }
 
 .foot-border {
@@ -519,10 +791,14 @@ a {
     font-size: 11px;
   }
 
+  .rotate-link:hover {
+    transform: scale(1.08);
+  }
+
   .ul-nav {
     flex-direction: row;
     height: auto;
-    gap: 16px;
+    gap: 14px;
     margin: 0;
   }
 
@@ -537,6 +813,7 @@ a {
 
   .hero {
     height: auto;
+    min-height: 88vh;
     padding: 80px 0 40px;
   }
 
@@ -567,5 +844,14 @@ a {
   .footericons {
     font-size: 60px;
     padding: 10px;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

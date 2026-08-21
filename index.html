@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Hobby Hub — Workfolio</title>
-  <meta name="description" content="My personal hobby hub — a dark, glassmorphic collection of things I love doing.">
+  <meta name="description" content="My personal hobby hub — a dark, glassmorphic 3D collection of things I love doing.">
   <meta name="theme-color" content="#000000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,14 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <div class="preloader-ring"></div>
+      <p class="preloader-text">LOADING&nbsp;FOLIO</p>
+    </div>
+  </div>
 
   <!-- Scroll progress bar -->
   <div class="progress-bar-container">
@@ -26,6 +34,7 @@
     <a href="#home" class="rotate-link nav-link" data-nav="home">Home</a>
     <div class="ul-nav">
       <a href="#hobbies" class="rotate-link nav-link" data-nav="hobbies">Hobbies</a>
+      <a href="#stats" class="rotate-link nav-link" data-nav="stats">Stats</a>
       <a href="#about" class="rotate-link nav-link" data-nav="about">About</a>
       <a href="#contact" class="rotate-link nav-link" data-nav="contact">Contact</a>
     </div>
@@ -35,6 +44,9 @@
   <main id="app" class="page-content">
     <!-- Content rendered by js/main.js -->
   </main>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 
   <footer class="site-footer" id="contact">
     <div class="footer-inner">
@@ -48,6 +60,8 @@
     </div>
   </footer>
 
+  <!-- Three.js for the 3D hero scene -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

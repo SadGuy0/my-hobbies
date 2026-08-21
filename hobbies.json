@@ -5,14 +5,9 @@
     "icon": "🗣️",
     "description": "Exploring new languages, cultures, and ways of communication.",
     "items": [
-      {
-        "title": "English",
-        "notes": "Improving fluency, vocabulary, and everyday conversation skills."
-      },
-      {
-        "title": "Japanese",
-        "notes": "Learning hiragana, katakana, and basic kanji. Goal: hold a simple conversation."
-      }
+      { "title": "English", "notes": "Improving fluency, vocabulary, and everyday conversation skills." },
+      { "title": "Japanese", "notes": "Learning hiragana, katakana, and basic kanji. Goal: hold a simple conversation." },
+      { "title": "Spanish", "notes": "Just started — mastering greetings, numbers, and common phrases." }
     ]
   },
   {
@@ -21,14 +16,119 @@
     "icon": "💻",
     "description": "Building projects, solving problems, and learning new technologies.",
     "items": [
-      {
-        "title": "Web Development",
-        "notes": "HTML, CSS, JavaScript — building websites like this one!"
-      },
-      {
-        "title": "Python",
-        "notes": "Scripting, automation, and small tools."
-      }
+      { "title": "Web Development", "notes": "HTML, CSS, JavaScript — building websites like this one!" },
+      { "title": "Python", "notes": "Scripting, automation, and small tools." },
+      { "title": "Open Source", "notes": "Exploring GitHub, contributing to small projects, and reading other people's code." }
+    ]
+  },
+  {
+    "id": "photography",
+    "name": "Photography",
+    "icon": "📷",
+    "description": "Capturing light, moments, and stories through the lens.",
+    "items": [
+      { "title": "Street Photography", "notes": "Candid shots of everyday life, shadows, and city geometry." },
+      { "title": "Long Exposure", "notes": "Light trails, silky water, and star trails at night." },
+      { "title": "Editing", "notes": "Learning Lightroom-style color grading and composition cropping." }
+    ]
+  },
+  {
+    "id": "music",
+    "name": "Music Production",
+    "icon": "🎧",
+    "description": "Making beats, mixing sounds, and exploring audio engineering.",
+    "items": [
+      { "title": "Lo-fi Beats", "notes": "Chill loops with vinyl crackle and jazzy chords." },
+      { "title": "Synths", "notes": "Sound design with subtractive and FM synthesis." },
+      { "title": "Mixing", "notes": "EQ, compression, and stereo imaging basics." }
+    ]
+  },
+  {
+    "id": "gaming",
+    "name": "Gaming",
+    "icon": "🎮",
+    "description": "Playing and analyzing games — mechanics, design, and speedruns.",
+    "items": [
+      { "title": "Strategy Games", "notes": "Chess puzzles and 4X strategy campaigns." },
+      { "title": "Indie Games", "notes": "Collecting hidden gems with unique art styles." },
+      { "title": "Game Design Notes", "notes": "Breaking down what makes level design feel good." }
+    ]
+  },
+  {
+    "id": "reading",
+    "name": "Reading",
+    "icon": "📚",
+    "description": "Getting lost in sci-fi worlds, biographies, and big ideas.",
+    "items": [
+      { "title": "Science Fiction", "notes": "Currently working through the classics — Asimov, Clarke, Le Guin." },
+      { "title": "Non-fiction", "notes": "Books about productivity, psychology, and how things work." },
+      { "title": "Reading Goal", "notes": "One book per month, notes written after each finish." }
+    ]
+  },
+  {
+    "id": "cooking",
+    "name": "Cooking",
+    "icon": "🍳",
+    "description": "Experimenting with flavors, techniques, and homemade comfort food.",
+    "items": [
+      { "title": "Weeknight Recipes", "notes": "Building a rotation of fast, tasty 30-minute meals." },
+      { "title": "Baking", "notes": "Bread, cookies, and the science of fermentation." },
+      { "title": "Meal Prep", "notes": "Planning weekly menus and reducing food waste." }
+    ]
+  },
+  {
+    "id": "fitness",
+    "name": "Fitness",
+    "icon": "🏋️",
+    "description": "Staying strong, mobile, and consistent with training.",
+    "items": [
+      { "title": "Strength Training", "notes": "Progressive overload with squats, deadlifts, and presses." },
+      { "title": "Running", "notes": "Building up to a comfortable 5K with easy-paced runs." },
+      { "title": "Mobility", "notes": "Daily stretching routine for hips, shoulders, and spine." }
+    ]
+  },
+  {
+    "id": "travel",
+    "name": "Travel",
+    "icon": "✈️",
+    "description": "Collecting places, foods, and stories from around the map.",
+    "items": [
+      { "title": "Bucket List", "notes": "Japan in cherry blossom season is dream #1." },
+      { "title": "Local Adventures", "notes": "Exploring nearby towns, trails, and hidden cafes." },
+      { "title": "Travel Journal", "notes": "Documenting every trip with photos and short notes." }
+    ]
+  },
+  {
+    "id": "drawing",
+    "name": "Drawing & Sketching",
+    "icon": "✏️",
+    "description": "Practicing lines, shading, and bringing ideas to paper.",
+    "items": [
+      { "title": "Daily Sketches", "notes": "A quick 15-minute sketch every day — objects, faces, scenes." },
+      { "title": "Digital Art", "notes": "Learning layers, brushes, and color theory on a tablet." },
+      { "title": "Perspective", "notes": "Studying 1-point and 2-point perspective for environments." }
+    ]
+  },
+  {
+    "id": "gardening",
+    "name": "Gardening",
+    "icon": "🌱",
+    "description": "Growing plants, herbs, and a little patience.",
+    "items": [
+      { "title": "Herb Garden", "notes": "Basil, mint, and coriander thriving on the balcony." },
+      { "title": "Succulents", "notes": "Low-maintenance collection with proper watering schedules." },
+      { "title": "Composting", "notes": "Turning kitchen scraps into soil food." }
+    ]
+  },
+  {
+    "id": "astronomy",
+    "name": "Astronomy",
+    "icon": "🔭",
+    "description": "Stargazing, tracking planets, and learning the night sky.",
+    "items": [
+      { "title": "Stargazing", "notes": "Identifying constellations and bright stars each season." },
+      { "title": "Astrophotography", "notes": "First attempts at shooting the Moon and star fields." },
+      { "title": "Space News", "notes": "Following launches, missions, and discoveries weekly." }
     ]
   }
 ]
