@@ -138,8 +138,9 @@ function renderHome() {
     <section class="hero" id="home">
       <canvas id="heroCanvas"></canvas>
       <div class="hero-container">
+        <div class="availability-badge"><span class="pulse-dot"></span> Available for new hobbies</div>
         <p class="hero-text">Introducing My</p>
-        <h1 class="hero-heading">HOBBY <span class="gradient-title1">FOLIO</span></h1>
+        <h1 class="hero-heading" id="heroHeading">HOBBY <span class="gradient-title1">FOLIO</span></h1>
         <p class="hero-sub"><span id="typedText"></span><span class="type-caret"></span></p>
         <button class="transparent-btn magnetic" onclick="document.getElementById('hobbies').scrollIntoView({behavior:'smooth'})">
           Explore Hobbies ↓
@@ -191,6 +192,10 @@ function renderHome() {
           <div class="stat-number" data-count="100">0</div>
           <div class="stat-label">% Curious</div>
         </div>
+        <div class="stat-box reveal" style="--reveal-delay:0.4s">
+          <div class="stat-number" id="ghRepos" data-count="0">0</div>
+          <div class="stat-label">GitHub Repos</div>
+        </div>
       </div>
     </section>
 
@@ -215,6 +220,40 @@ function renderHome() {
           <li class="aboutli">Each hobby has its own page with sub-topics and progress notes.</li>
           <li class="aboutli edu-li">New hobbies can be added anytime by editing hobbies.json — the site updates automatically.</li>
         </ul>
+      </div>
+      <div class="tech-tags reveal">
+        <span class="tech-tag">HTML5</span>
+        <span class="tech-tag">CSS3</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">Three.js</span>
+        <span class="tech-tag">WebGL</span>
+        <span class="tech-tag">JSON</span>
+        <span class="tech-tag">Git</span>
+        <span class="tech-tag">GitHub Pages</span>
+        <span class="tech-tag">Intersection Observer</span>
+        <span class="tech-tag">Canvas API</span>
+      </div>
+      <div class="journey reveal">
+        <div class="journey-item">
+          <p class="journey-year">Phase 01</p>
+          <p class="journey-title">Curiosity sparked</p>
+          <p class="journey-desc">Started tinkering with HTML pages and wondered how the web worked.</p>
+        </div>
+        <div class="journey-item">
+          <p class="journey-year">Phase 02</p>
+          <p class="journey-title">First real projects</p>
+          <p class="journey-desc">Built small tools and sites, learned CSS deeply, fell for JavaScript.</p>
+        </div>
+        <div class="journey-item">
+          <p class="journey-year">Phase 03</p>
+          <p class="journey-title">3D & motion</p>
+          <p class="journey-desc">Discovered Three.js and animation — this workfolio is the result.</p>
+        </div>
+        <div class="journey-item">
+          <p class="journey-year">Now</p>
+          <p class="journey-title">Always learning</p>
+          <p class="journey-desc">12 hobbies and counting — the collection keeps growing.</p>
+        </div>
       </div>
     </section>`;
 }
@@ -254,9 +293,18 @@ function renderHobbyDetail(id) {
     </div>`;
 }
 
+// ---------- Page transition overlay ----------
+function playPageTransition() {
+  const overlay = document.getElementById("pageTransition");
+  if (!overlay) return;
+  overlay.classList.add("covering");
+  setTimeout(() => overlay.classList.remove("covering"), 550);
+}
+
 // ---------- Router ----------
-function route() {
+function route(withTransition = false) {
   const hash = location.hash.replace(/^#/, "");
+  if (withTransition) playPageTransition();
 
   if (hash.startsWith("hobby/")) {
     renderHobbyDetail(decodeURIComponent(hash.slice("hobby/".length)));
@@ -292,12 +340,88 @@ function route() {
   initScramble();
   initMagnetic();
   startQuotes();
+  initLetterWave();
 }
 
 function setActiveNav(id) {
   document.querySelectorAll(".nav-link").forEach((link) => {
     link.classList.toggle("active", link.dataset.nav === id);
   });
+  document.querySelectorAll(".side-dot").forEach((dot) => {
+    dot.classList.toggle("active", dot.dataset.section === id);
+  });
+}
+
+// ---------- Side dot section indicator ----------
+function initSideDots() {
+  const container = document.getElementById("sideDots");
+  if (!container) return;
+  const sections = ["home", "hobbies", "stats", "about"];
+  container.innerHTML = sections
+    .map((id) => `<button class="side-dot" data-section="${id}" aria-label="Go to ${id}"></button>`)
+    .join("");
+  container.querySelectorAll(".side-dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      document.getElementById(dot.dataset.section)?.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+}
+
+// ---------- Keyboard shortcuts ----------
+function initKeyboardShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, textarea")) return;
+    const key = e.key.toLowerCase();
+    if (key === "t") {
+      document.getElementById("themeToggle")?.click();
+    } else if (key === "h") {
+      location.hash = "#home";
+    } else if (e.key === "Escape" && location.hash.startsWith("#hobby/")) {
+      location.hash = "#home";
+    }
+  });
+}
+
+// ---------- Letter wave on hero heading ----------
+function initLetterWave() {
+  const heading = document.getElementById("heroHeading");
+  if (!heading || heading.dataset.waveBound) return;
+  heading.dataset.waveBound = "1";
+
+  function splitLetters(node) {
+    [...node.childNodes].forEach((child) => {
+      if (child.nodeType === 3 && child.textContent.trim()) {
+        const frag = document.createDocumentFragment();
+        [...child.textContent].forEach((ch, i) => {
+          const span = document.createElement("span");
+          span.className = "wave-letter";
+          span.style.setProperty("--i", i);
+          span.textContent = ch;
+          frag.appendChild(span);
+        });
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === 1) {
+        splitLetters(child);
+      }
+    });
+  }
+  splitLetters(heading);
+}
+
+// ---------- Live GitHub stats (public API) ----------
+async function fetchGitHubStats() {
+  try {
+    const res = await fetch("https://api.github.com/users/SadGuy0");
+    if (!res.ok) return;
+    const data = await res.json();
+    const el = document.getElementById("ghRepos");
+    if (el && data.public_repos != null) {
+      el.dataset.count = data.public_repos;
+      animateCounter(el);
+    }
+  } catch {
+    /* offline — keep the placeholder */
+  }
 }
 
 // ---------- Scrollspy (nav follows scroll position) ----------
@@ -908,7 +1032,10 @@ function initHeroScene() {
   startClock();
   initKonami();
   initScrollSpy();
+  initSideDots();
+  initKeyboardShortcuts();
   runPreloader();
+  fetchGitHubStats();
 })();
 
-window.addEventListener("hashchange", route);
+window.addEventListener("hashchange", () => route(true));
