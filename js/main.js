@@ -341,6 +341,10 @@ function route(withTransition = false) {
   initMagnetic();
   startQuotes();
   initLetterWave();
+  if (hash === "" || hash === "home" || hash.startsWith("hobby/")) {
+    // re-attach the 3D scene whenever a fresh hero canvas is rendered
+    initHeroScene();
+  }
 }
 
 function setActiveNav(id) {
@@ -831,9 +835,17 @@ document.getElementById("backToTop")?.addEventListener("click", () => {
 // 3D HERO SCENE — floating geometric shapes (Three.js)
 // Auto-rotates, reacts to mouse movement, drag to spin.
 // ============================================================
+let heroRenderer = null;
+
 function initHeroScene() {
   const canvas = document.getElementById("heroCanvas");
   if (!canvas || typeof THREE === "undefined") return;
+
+  // dispose the previous renderer to avoid leaking WebGL contexts
+  if (heroRenderer) {
+    heroRenderer.dispose();
+    heroRenderer = null;
+  }
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -973,6 +985,7 @@ function initHeroScene() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
+  heroRenderer = renderer;
   resize();
   window.addEventListener("resize", resize);
 
