@@ -2,21 +2,38 @@
 // My Hobby Hub — Workfolio style
 // Renders content from hobbies.json
 // Hash routing:
-//   #home            -> hero + hobbies + stats + about
+//   #home            -> hero + hobbies + stats + quotes + about
 //   #hobbies         -> hobbies section
 //   #stats           -> stats section
 //   #about           -> about section
 //   #hobby/<id>      -> detail page for one hobby
-// Extras: 3D hero scene (Three.js), typing effect,
-//         scroll reveals, counters, marquee, card tilt,
-//         back-to-top, preloader
+//
+// Pro-portfolio features:
+//   - Preloader with % counter
+//   - Interactive 3D hero scene (Three.js)
+//   - Typing effect, text scramble headings
+//   - Scroll reveals, animated counters, marquee
+//   - 3D card tilt, magnetic buttons
+//   - Hobby category filtering
+//   - Quotes carousel (auto-rotating)
+//   - Scrollspy nav highlighting
+//   - Dark/light theme toggle (persisted)
+//   - Copy-email toast, live local clock
+//   - Back-to-top, custom cursor
+//   - Konami code party mode easter egg
 // ============================================================
 
 const app = document.getElementById("app");
 let hobbies = [];
 
-// Gradient border variants cycled across cards (like the reference folio)
 const GRADIENTS = ["g-yellow", "g-redish", "g-blue", "g-orange"];
+const CATEGORY_LABELS = {
+  all: "All",
+  tech: "Tech",
+  creative: "Creative",
+  active: "Active",
+  mind: "Mind",
+};
 
 const TYPED_PHRASES = [
   "learning languages one phrase at a time.",
@@ -26,6 +43,16 @@ const TYPED_PHRASES = [
   "reading way too much sci-fi.",
   "staring at stars and wondering."
 ];
+
+const QUOTES = [
+  { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+  { text: "Creativity is intelligence having fun.", author: "Albert Einstein" },
+  { text: "We are what we repeatedly do. Excellence, then, is not an act but a habit.", author: "Aristotle" },
+  { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+  { text: "Stay curious. The world rewards those who wonder.", author: "Unknown" },
+];
+
+let activeFilter = "all";
 
 // ---------- Data loading ----------
 async function loadHobbies() {
@@ -59,6 +86,15 @@ function escapeHtml(str = "") {
   return String(str).replace(/[&<>"']/g, (c) => ESCAPE_MAP[c]);
 }
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove("show"), 2400);
+}
+
 // ---------- Views ----------
 function renderHome() {
   const totalItems = hobbies.reduce((n, h) => n + (h.items || []).length, 0);
@@ -68,13 +104,13 @@ function renderHome() {
       (h, i) => `
       <article class="first-childern ${GRADIENTS[i % GRADIENTS.length]} reveal"
                style="--reveal-delay:${(i % 4) * 0.12}s"
-               data-tilt
+               data-tilt data-category="${escapeHtml(h.category || "all")}"
                onclick="location.hash='hobby/${escapeHtml(h.id)}'">
         <div class="card-body">
           <span class="card-icon">${escapeHtml(h.icon || "✨")}</span>
           <h3 class="card-title">${escapeHtml(h.name)}</h3>
           <p class="card-text">${escapeHtml(h.description || "")}</p>
-          <span class="card-count">${(h.items || []).length} item${
+          <span class="card-count">${escapeHtml(CATEGORY_LABELS[h.category] || "Fun")} &middot; ${(h.items || []).length} item${
             (h.items || []).length === 1 ? "" : "s"
           }</span>
         </div>
@@ -82,9 +118,20 @@ function renderHome() {
     )
     .join("");
 
+  const filterChips = Object.entries(CATEGORY_LABELS)
+    .map(
+      ([key, label]) =>
+        `<button class="filter-chip ${key === activeFilter ? "active" : ""}" data-filter="${key}">${label}</button>`
+    )
+    .join("");
+
   const marqueeItems = hobbies
     .map((h) => `<span>${escapeHtml(h.icon || "✨")} <b>${escapeHtml(h.name)}</b></span>`)
     .join("");
+
+  const quoteDots = QUOTES.map(
+    (_, i) => `<button class="quote-dot ${i === 0 ? "active" : ""}" data-quote="${i}" aria-label="Quote ${i + 1}"></button>`
+  ).join("");
 
   app.innerHTML = `
     <!-- ===== Hero with 3D scene ===== -->
@@ -94,7 +141,7 @@ function renderHome() {
         <p class="hero-text">Introducing My</p>
         <h1 class="hero-heading">HOBBY <span class="gradient-title1">FOLIO</span></h1>
         <p class="hero-sub"><span id="typedText"></span><span class="type-caret"></span></p>
-        <button class="transparent-btn" onclick="document.getElementById('hobbies').scrollIntoView({behavior:'smooth'})">
+        <button class="transparent-btn magnetic" onclick="document.getElementById('hobbies').scrollIntoView({behavior:'smooth'})">
           Explore Hobbies ↓
         </button>
       </div>
@@ -111,11 +158,12 @@ function renderHome() {
     <!-- ===== Hobbies ===== -->
     <section id="hobbies">
       <div class="section-head reveal">
-        <p class="section-kicker">Recent Works</p>
-        <h2 class="section-title">Things I Love Doing</h2>
-        <p class="section-sub">Highlights the hobbies I'm currently pursuing — each one has its own page with sub-topics and progress notes.</p>
+        <p class="section-kicker"><span class="sec-num">01.</span>Recent Works</p>
+        <h2 class="section-title" data-scramble>Things I Love Doing</h2>
+        <p class="section-sub">Highlights the hobbies I'm currently pursuing — filter them by vibe, or open one for sub-topics and progress notes.</p>
       </div>
-      <div class="hobby-grid">
+      <div class="filter-bar reveal">${filterChips}</div>
+      <div class="hobby-grid" id="hobbyGrid">
         ${cards || `<div class="empty-note">No hobbies yet — add some in <code>hobbies.json</code>.</div>`}
       </div>
     </section>
@@ -123,8 +171,8 @@ function renderHome() {
     <!-- ===== Stats ===== -->
     <section class="stats-section" id="stats">
       <div class="section-head reveal" style="padding-top:0;">
-        <p class="section-kicker">By The Numbers</p>
-        <h2 class="section-title">A Quick Snapshot</h2>
+        <p class="section-kicker"><span class="sec-num">02.</span>By The Numbers</p>
+        <h2 class="section-title" data-scramble>A Quick Snapshot</h2>
       </div>
       <div class="stats-grid">
         <div class="stat-box reveal" style="--reveal-delay:0s">
@@ -146,11 +194,20 @@ function renderHome() {
       </div>
     </section>
 
+    <!-- ===== Quotes ===== -->
+    <section class="quotes-section" id="quotes">
+      <div class="quote-box reveal">
+        <p class="quote-text" id="quoteText">"${QUOTES[0].text}"</p>
+        <p class="quote-author" id="quoteAuthor">— ${QUOTES[0].author}</p>
+        <div class="quote-dots">${quoteDots}</div>
+      </div>
+    </section>
+
     <!-- ===== About ===== -->
     <section class="about-section" id="about">
       <div class="section-head reveal" style="padding-top:0;">
-        <p class="section-kicker">Introducing Me</p>
-        <h2 class="section-title">About This Site</h2>
+        <p class="section-kicker"><span class="sec-num">03.</span>Introducing Me</p>
+        <h2 class="section-title" data-scramble>About This Site</h2>
       </div>
       <div class="boxs reveal">
         <ul>
@@ -231,11 +288,34 @@ function route() {
   initReveals();
   initCounters();
   initTilt();
+  initFilters();
+  initScramble();
+  initMagnetic();
+  startQuotes();
 }
 
 function setActiveNav(id) {
   document.querySelectorAll(".nav-link").forEach((link) => {
     link.classList.toggle("active", link.dataset.nav === id);
+  });
+}
+
+// ---------- Scrollspy (nav follows scroll position) ----------
+function initScrollSpy() {
+  const sections = ["home", "hobbies", "stats", "about"];
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.25) {
+          setActiveNav(entry.target.id);
+        }
+      });
+    },
+    { threshold: [0.25, 0.5] }
+  );
+  sections.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) spy.observe(el);
   });
 }
 
@@ -265,7 +345,6 @@ function animateCounter(el) {
 
   function tick(now) {
     const p = Math.min((now - start) / duration, 1);
-    // easeOutExpo for a smooth landing
     const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
     el.textContent = Math.round(target * eased);
     if (p < 1) requestAnimationFrame(tick);
@@ -286,6 +365,138 @@ function initCounters() {
     { threshold: 0.4 }
   );
   document.querySelectorAll(".stat-number").forEach((el) => counterObserver.observe(el));
+}
+
+// ---------- Text scramble effect ----------
+function scrambleText(el) {
+  if (el.dataset.scrambled) return;
+  el.dataset.scrambled = "1";
+  const original = el.textContent;
+  const chars = "!<>-_\\/[]{}—=+*^?#________";
+  let frame = 0;
+  const queue = original.split("").map((ch, i) => ({
+    from: ch,
+    to: ch,
+    start: Math.floor(Math.random() * 20),
+    end: Math.floor(Math.random() * 20) + 20,
+  }));
+
+  function update() {
+    let output = "";
+    let done = 0;
+    queue.forEach((q) => {
+      if (frame >= q.end) {
+        output += q.to;
+        done++;
+      } else if (frame >= q.start) {
+        output += chars[Math.floor(Math.random() * chars.length)];
+      } else {
+        output += q.from;
+      }
+    });
+    el.textContent = output;
+    if (done < queue.length) {
+      frame++;
+      requestAnimationFrame(update);
+    } else {
+      el.textContent = original;
+    }
+  }
+  update();
+}
+
+function initScramble() {
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          scrambleText(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.6 }
+  );
+  document.querySelectorAll("[data-scramble]").forEach((el) => obs.observe(el));
+}
+
+// ---------- Category filtering ----------
+function applyFilter(filter) {
+  activeFilter = filter;
+  document.querySelectorAll(".filter-chip").forEach((chip) => {
+    chip.classList.toggle("active", chip.dataset.filter === filter);
+  });
+  document.querySelectorAll("#hobbyGrid .first-childern").forEach((card) => {
+    const match = filter === "all" || card.dataset.category === filter;
+    card.classList.toggle("filter-hide", !match);
+    card.classList.remove("filter-pop");
+    if (match) {
+      void card.offsetWidth; // restart animation
+      card.classList.add("filter-pop");
+    }
+  });
+}
+
+function initFilters() {
+  document.querySelectorAll(".filter-chip").forEach((chip) => {
+    chip.addEventListener("click", () => applyFilter(chip.dataset.filter));
+  });
+}
+
+// ---------- Quotes carousel ----------
+let quoteIndex = 0;
+let quoteTimer;
+
+function showQuote(i) {
+  const textEl = document.getElementById("quoteText");
+  const authorEl = document.getElementById("quoteAuthor");
+  if (!textEl || !authorEl) return;
+  quoteIndex = i % QUOTES.length;
+
+  textEl.classList.add("fading");
+  authorEl.classList.add("fading");
+
+  setTimeout(() => {
+    textEl.textContent = `"${QUOTES[quoteIndex].text}"`;
+    authorEl.textContent = `— ${QUOTES[quoteIndex].author}`;
+    textEl.classList.remove("fading");
+    authorEl.classList.remove("fading");
+  }, 500);
+
+  document.querySelectorAll(".quote-dot").forEach((d, di) => {
+    d.classList.toggle("active", di === quoteIndex);
+  });
+}
+
+function startQuotes() {
+  clearInterval(quoteTimer);
+  quoteTimer = setInterval(() => showQuote(quoteIndex + 1), 6000);
+  document.querySelectorAll(".quote-dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      clearInterval(quoteTimer);
+      showQuote(parseInt(dot.dataset.quote, 10));
+      startQuotes();
+    });
+  });
+}
+
+// ---------- Magnetic buttons ----------
+function initMagnetic() {
+  document.querySelectorAll(".magnetic").forEach((el) => {
+    if (el.dataset.magneticBound) return;
+    el.dataset.magneticBound = "1";
+
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+    });
+
+    el.addEventListener("mouseleave", () => {
+      el.style.transform = "";
+    });
+  });
 }
 
 // ---------- 3D card tilt ----------
@@ -325,7 +536,7 @@ function startTyping() {
       el.textContent = phrase.slice(0, charIndex);
       if (charIndex === phrase.length) {
         deleting = true;
-        setTimeout(tick, 2200); // pause at full phrase
+        setTimeout(tick, 2200);
         return;
       }
       setTimeout(tick, 45 + Math.random() * 55);
@@ -342,6 +553,117 @@ function startTyping() {
     }
   }
   tick();
+}
+
+// ---------- Theme toggle (persisted) ----------
+function initTheme() {
+  const saved = localStorage.getItem("theme");
+  if (saved) setTheme(saved);
+
+  document.getElementById("themeToggle")?.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme || "dark";
+    const next = current === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("theme", next);
+    showToast(next === "light" ? "☀️ Light mode on" : "🌙 Dark mode on");
+  });
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  const toggle = document.getElementById("themeToggle");
+  if (toggle) toggle.textContent = theme === "light" ? "☀️" : "🌙";
+}
+
+// ---------- Copy email ----------
+function initCopyEmail() {
+  document.getElementById("copyEmail")?.addEventListener("click", async () => {
+    const email = "sadguy0@github.io";
+    try {
+      await navigator.clipboard.writeText(email);
+      showToast("📧 Email copied to clipboard!");
+    } catch {
+      showToast(`📧 ${email}`);
+    }
+  });
+}
+
+// ---------- Live local clock ----------
+function startClock() {
+  const el = document.getElementById("localTime");
+  if (!el) return;
+  function tick() {
+    const now = new Date();
+    el.textContent =
+      "LOCAL TIME · " +
+      now.toLocaleTimeString("en-IN", { hour12: false }) +
+      " IST";
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ---------- Konami code party mode ----------
+function initKonami() {
+  const sequence = [
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+    "b", "a",
+  ];
+  let pos = 0;
+
+  document.addEventListener("keydown", (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === sequence[pos]) {
+      pos++;
+      if (pos === sequence.length) {
+        pos = 0;
+        startParty();
+      }
+    } else {
+      pos = key === sequence[0] ? 1 : 0;
+    }
+  });
+}
+
+function startParty() {
+  showToast("🎉 PARTY MODE! 🎉");
+  document.body.classList.add("party");
+  const emojis = ["🎉", "🎊", "✨", "🥳", "⭐", "💫", "🎈", "🔥"];
+  let bursts = 0;
+  const interval = setInterval(() => {
+    for (let i = 0; i < 8; i++) {
+      const emoji = document.createElement("span");
+      emoji.className = "party-emoji";
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = `${Math.random() * 100}vw`;
+      emoji.style.animationDuration = `${2 + Math.random() * 2}s`;
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 4200);
+    }
+    if (++bursts >= 6) {
+      clearInterval(interval);
+      setTimeout(() => document.body.classList.remove("party"), 2000);
+    }
+  }, 350);
+}
+
+// ---------- Preloader with % counter ----------
+function runPreloader() {
+  const preloader = document.getElementById("preloader");
+  const percentEl = document.getElementById("preloaderPercent");
+  if (!preloader || !percentEl) return;
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    // ease toward 100 with random increments for a natural feel
+    progress = Math.min(100, progress + Math.random() * 14 + 4);
+    percentEl.textContent = `${Math.floor(progress)}%`;
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => preloader.classList.add("hidden"), 350);
+    }
+  }, 90);
 }
 
 // ---------- Scroll progress bar + back to top ----------
@@ -548,7 +870,7 @@ function initHeroScene() {
 
     // Gentle auto-rotation + inertia after dragging
     if (!drag.active) {
-      drag.velX += (0.004 - drag.velX) * 0.02; // ease back to base speed
+      drag.velX += (0.004 - drag.velX) * 0.02;
       knot.rotation.y += drag.velX;
       knot.rotation.x += drag.velY * 0.98;
       drag.velY *= 0.95;
@@ -574,13 +896,6 @@ function initHeroScene() {
   animate();
 }
 
-// ---------- Preloader ----------
-function hidePreloader() {
-  const preloader = document.getElementById("preloader");
-  if (!preloader) return;
-  setTimeout(() => preloader.classList.add("hidden"), 600);
-}
-
 // ---------- Init ----------
 (async function init() {
   await loadHobbies();
@@ -588,7 +903,12 @@ function hidePreloader() {
   updateProgress();
   startTyping();
   initHeroScene();
-  hidePreloader();
+  initTheme();
+  initCopyEmail();
+  startClock();
+  initKonami();
+  initScrollSpy();
+  runPreloader();
 })();
 
 window.addEventListener("hashchange", route);

@@ -3,6 +3,7 @@
     "id": "language-learning",
     "name": "Language Learning",
     "icon": "🗣️",
+    "category": "mind",
     "description": "Exploring new languages, cultures, and ways of communication.",
     "items": [
       { "title": "English", "notes": "Improving fluency, vocabulary, and everyday conversation skills." },
@@ -14,6 +15,7 @@
     "id": "coding",
     "name": "Coding",
     "icon": "💻",
+    "category": "tech",
     "description": "Building projects, solving problems, and learning new technologies.",
     "items": [
       { "title": "Web Development", "notes": "HTML, CSS, JavaScript — building websites like this one!" },
@@ -25,6 +27,7 @@
     "id": "photography",
     "name": "Photography",
     "icon": "📷",
+    "category": "creative",
     "description": "Capturing light, moments, and stories through the lens.",
     "items": [
       { "title": "Street Photography", "notes": "Candid shots of everyday life, shadows, and city geometry." },
@@ -36,6 +39,7 @@
     "id": "music",
     "name": "Music Production",
     "icon": "🎧",
+    "category": "creative",
     "description": "Making beats, mixing sounds, and exploring audio engineering.",
     "items": [
       { "title": "Lo-fi Beats", "notes": "Chill loops with vinyl crackle and jazzy chords." },
@@ -47,6 +51,7 @@
     "id": "gaming",
     "name": "Gaming",
     "icon": "🎮",
+    "category": "active",
     "description": "Playing and analyzing games — mechanics, design, and speedruns.",
     "items": [
       { "title": "Strategy Games", "notes": "Chess puzzles and 4X strategy campaigns." },
@@ -58,6 +63,7 @@
     "id": "reading",
     "name": "Reading",
     "icon": "📚",
+    "category": "mind",
     "description": "Getting lost in sci-fi worlds, biographies, and big ideas.",
     "items": [
       { "title": "Science Fiction", "notes": "Currently working through the classics — Asimov, Clarke, Le Guin." },
@@ -69,6 +75,7 @@
     "id": "cooking",
     "name": "Cooking",
     "icon": "🍳",
+    "category": "active",
     "description": "Experimenting with flavors, techniques, and homemade comfort food.",
     "items": [
       { "title": "Weeknight Recipes", "notes": "Building a rotation of fast, tasty 30-minute meals." },
@@ -80,6 +87,7 @@
     "id": "fitness",
     "name": "Fitness",
     "icon": "🏋️",
+    "category": "active",
     "description": "Staying strong, mobile, and consistent with training.",
     "items": [
       { "title": "Strength Training", "notes": "Progressive overload with squats, deadlifts, and presses." },
@@ -91,6 +99,7 @@
     "id": "travel",
     "name": "Travel",
     "icon": "✈️",
+    "category": "active",
     "description": "Collecting places, foods, and stories from around the map.",
     "items": [
       { "title": "Bucket List", "notes": "Japan in cherry blossom season is dream #1." },
@@ -102,6 +111,7 @@
     "id": "drawing",
     "name": "Drawing & Sketching",
     "icon": "✏️",
+    "category": "creative",
     "description": "Practicing lines, shading, and bringing ideas to paper.",
     "items": [
       { "title": "Daily Sketches", "notes": "A quick 15-minute sketch every day — objects, faces, scenes." },
@@ -113,6 +123,7 @@
     "id": "gardening",
     "name": "Gardening",
     "icon": "🌱",
+    "category": "active",
     "description": "Growing plants, herbs, and a little patience.",
     "items": [
       { "title": "Herb Garden", "notes": "Basil, mint, and coriander thriving on the balcony." },
@@ -124,6 +135,7 @@
     "id": "astronomy",
     "name": "Astronomy",
     "icon": "🔭",
+    "category": "mind",
     "description": "Stargazing, tracking planets, and learning the night sky.",
     "items": [
       { "title": "Stargazing", "notes": "Identifying constellations and bright stars each season." },

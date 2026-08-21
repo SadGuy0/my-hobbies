@@ -772,6 +772,434 @@ a {
   margin-top: 8px;
 }
 
+/* ===== Theme toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 10001;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #ffffff1c;
+  background: #0b0b0bcc;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.35s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(20deg) scale(1.1);
+  border-color: #82a1fc66;
+}
+
+/* ===== Preloader percent ===== */
+.preloader-percent {
+  font-size: 42px;
+  font-weight: 800;
+  background-image: linear-gradient(to right, #82a1fc, #ffb6b6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 4px;
+}
+
+/* ===== Filter chips ===== */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 6% 26px;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid #ffffff1c;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #bfbebe;
+  font-family: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.filter-chip:hover {
+  color: #fff;
+  border-color: #82a1fc66;
+  transform: translateY(-2px);
+}
+
+.filter-chip.active {
+  color: #000;
+  background: linear-gradient(90deg, #82a1fc, #ffb6b6);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.first-childern.filter-hide {
+  display: none;
+}
+
+.first-childern.filter-pop {
+  animation: filterPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes filterPop {
+  from { opacity: 0; transform: scale(0.85) translateY(14px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ===== Quotes carousel ===== */
+.quotes-section {
+  padding: 30px 6% 70px;
+  text-align: center;
+}
+
+.quote-box {
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  border: 1px solid #ffffff14;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-image: linear-gradient(45deg, #050a8c10, #02005708);
+  border-radius: 3px;
+  padding: 34px 30px;
+  transition: border-color 0.5s ease;
+}
+
+.quote-box:hover {
+  border-color: #82a1fc44;
+}
+
+.quote-text {
+  font-size: clamp(17px, 2.4vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  color: #ffffffd9;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.quote-author {
+  color: gold;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: opacity 0.5s ease;
+}
+
+.quote-text.fading, .quote-author.fading {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.quote-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.quote-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #ffffff59;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  padding: 0;
+}
+
+.quote-dot.active {
+  background: #82a1fc;
+  border-color: #82a1fc;
+  transform: scale(1.25);
+}
+
+/* ===== Copy email ===== */
+.copy-email {
+  background: transparent;
+  border: 1px solid #ffffff1c;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 600;
+  padding: 16px 30px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-bottom: 26px;
+}
+
+.copy-email:hover {
+  border-color: #82a1fc;
+  box-shadow: 0 14px 40px #0071e326;
+  transform: translateY(-3px);
+}
+
+.copy-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff59;
+  margin-left: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== Local time + konami hint ===== */
+.local-time {
+  margin-top: 14px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #82a1fc;
+  font-variant-numeric: tabular-nums;
+}
+
+.konami-hint {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #ffffff2e;
+  letter-spacing: 1px;
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  background: #101528ee;
+  border: 1px solid #82a1fc66;
+  color: #fff;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-size: 14px;
+  z-index: 100000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+/* ===== Section numbers ===== */
+.sec-num {
+  color: #ffffff38;
+  font-weight: 300;
+  margin-right: 10px;
+}
+
+/* ===== Party mode (Konami) ===== */
+body.party {
+  animation: partyHue 3s linear infinite;
+}
+
+@keyframes partyHue {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+.party-emoji {
+  position: fixed;
+  top: -40px;
+  font-size: 26px;
+  z-index: 99999;
+  pointer-events: none;
+  animation: emojiFall linear forwards;
+}
+
+@keyframes emojiFall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0.6; }
+}
+
+/* ===== Light theme ===== */
+[data-theme="light"] body,
+[data-theme="light"] {
+  background-color: #eef0f6;
+  color: #16181d;
+}
+
+[data-theme="light"] .navhome {
+  border-right-color: #16181d1a;
+  background-image: linear-gradient(45deg, #ffffff00, transparent);
+}
+
+[data-theme="light"] .rotate-link {
+  color: #55596a;
+}
+
+[data-theme="light"] .rotate-link:hover,
+[data-theme="light"] .rotate-link.active {
+  color: #0057c2;
+}
+
+[data-theme="light"] .top-status,
+[data-theme="light"] .hero-text,
+[data-theme="light"] .hero-sub,
+[data-theme="light"] .section-sub,
+[data-theme="light"] .detail-desc,
+[data-theme="light"] .card-text,
+[data-theme="light"] .stat-label,
+[data-theme="light"] .aboutli,
+[data-theme="light"] .accordion-items p {
+  color: #55596a;
+}
+
+[data-theme="light"] .hero-heading,
+[data-theme="light"] .section-title,
+[data-theme="light"] .detail-header h1,
+[data-theme="light"] .card-title,
+[data-theme="light"] .accordion-items h3,
+[data-theme="light"] .stat-number {
+  color: #16181d;
+  -webkit-text-fill-color: currentColor;
+}
+
+[data-theme="light"] .hero-heading .gradient-title1,
+[data-theme="light"] .stat-number {
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .card-body {
+  background:
+    linear-gradient(#ffffffee, #ffffffee) padding-box,
+    linear-gradient(135deg, #ddd, #fff) border-box;
+  box-shadow: inset 1px -60px 60px 9px #00000008;
+}
+
+[data-theme="light"] .first-childern {
+  box-shadow: 0 10px 30px #16181d14;
+}
+
+[data-theme="light"] .marquee {
+  background: #e4e7f0;
+  border-color: #16181d14;
+}
+
+[data-theme="light"] .marquee-track span {
+  color: #55596a;
+}
+
+[data-theme="light"] .stat-box,
+[data-theme="light"] .quote-box {
+  border-color: #16181d1a;
+  background-image: linear-gradient(45deg, #283bb50d, #82a1fc0a);
+}
+
+[data-theme="light"] .boxs {
+  border-color: #c0392b33;
+  background-image: linear-gradient(45deg, #f443360a, #66141405);
+}
+
+[data-theme="light"] .aboutli {
+  border-bottom-color: #c0392b26;
+}
+
+[data-theme="light"] .accordion-items {
+  border-color: #283bb555;
+}
+
+[data-theme="light"] .accordion-items h3 {
+  border-right-color: #283bb555;
+}
+
+[data-theme="light"] .accordion-items:hover {
+  background-image: linear-gradient(45deg, #050a8c14, #0200570a);
+}
+
+[data-theme="light"] .empty-note {
+  border-color: #16181d26;
+  color: #55596a;
+}
+
+[data-theme="light"] .site-footer {
+  border-top-color: #16181d1a;
+}
+
+[data-theme="light"] .foot-border {
+  border-top-color: #e67e2280;
+  color: #3a3d47;
+}
+
+[data-theme="light"] .fontsm,
+[data-theme="light"] .konami-hint {
+  color: #8a8fa3;
+}
+
+[data-theme="light"] .theme-toggle,
+[data-theme="light"] .back-to-top,
+[data-theme="light"] .copy-email,
+[data-theme="light"] .transparent-btn,
+[data-theme="light"] .filter-chip,
+[data-theme="light"] .card-count {
+  background: #ffffffcc;
+  border-color: #16181d1f;
+  color: #16181d;
+}
+
+[data-theme="light"] .transparent-btn:hover,
+[data-theme="light"] .back-to-top:hover,
+[data-theme="light"] .theme-toggle:hover {
+  border-color: #0057c2;
+  color: #0057c2;
+}
+
+[data-theme="light"] .filter-chip.active {
+  color: #fff;
+}
+
+[data-theme="light"] .toast {
+  background: #ffffffee;
+  border-color: #0057c266;
+  color: #16181d;
+}
+
+[data-theme="light"] .cursor-circle {
+  border-color: #16181d40;
+}
+
+[data-theme="light"] .preloader {
+  background: #eef0f6;
+}
+
+[data-theme="light"] .preloader-text {
+  color: #55596a;
+}
+
+[data-theme="light"] .quote-text {
+  color: #2a2d38;
+}
+
+[data-theme="light"] .quote-dot {
+  border-color: #16181d59;
+}
+
+[data-theme="light"] .quote-dot.active {
+  background: #0057c2;
+  border-color: #0057c2;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 767px) {
   .navhome {
